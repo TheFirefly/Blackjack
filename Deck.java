@@ -60,7 +60,7 @@ public class Deck {
 		int x = 50;
 		for (int i = 0 ; i < this.cards.length ; i++) {
 			this.cards[i].draw(g, this.cards[i].toString(), new Rectangle(x, 50, 200, 300));
-			x += 25;
+			x += 225;
 		}
 	}
 

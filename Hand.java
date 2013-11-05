@@ -25,7 +25,7 @@ public class Hand {
 		
 		for (int i = 0 ; i < amountOfCards ; i++) {
 			this.cards[i].draw(g, this.cards[i].toString(), new Rectangle(x, 50, 200, 300));
-			x += 100;
+			x += 225;
 		}
 	}
 
