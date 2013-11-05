@@ -3,12 +3,14 @@ public class Player {
 	private Hand hand;
 	private String type;
 	private int score;
+	private int maxScore;
 
-	public Player(String type, Card initialCard) {
+	public Player(String type, Card initialCard, int maxScore) {
 		this.type = type;
 		this.score = 0;
 		this.hand = new Hand(initialCard);
 		this.updateScore(initialCard);
+		this.maxScore = maxScore;
 
 		System.out.println("Card dealt: " + initialCard);
 	}
@@ -43,7 +45,7 @@ public class Player {
 
 		//Now calculate each ace value so that ace value is 11 until it makes it > 21
 		for (int i = 0 ; i < num ; i++) {
-			if (newScore + aces[i].getValues()[1] <= 21) {
+			if (newScore + aces[i].getValues()[1] <= 21 && newScore + aces[i].getValues()[1] != this.maxScore) {
 				newScore += aces[i].getValues()[1];
 			} else {
 				newScore += aces[i].getValues()[0];

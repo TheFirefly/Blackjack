@@ -12,7 +12,7 @@ public class Blackjack extends Applet {
 
 		deck.shuffle();
 
-		p = new Player("Player", deck.dealCard());
+		p = new Player("Player", deck.dealCard(), 17);
 
 		while(p.getScore() < 17) {
 			p.dealCard(deck);
