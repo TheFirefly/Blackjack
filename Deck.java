@@ -1,4 +1,6 @@
 import java.util.Random;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 
 public class Deck {
 
@@ -42,19 +44,6 @@ public class Deck {
 		}
 	}
 
-	//TEMP
-	public static void main(String[] args) {
-		Deck d = new Deck();
-
-		d.shuffle();
-
-		Player p = new Player("Player", d.dealCard());
-
-		while(p.getScore() < 21) {
-			p.dealCard(d);
-		}
-	}
-
 	public void shuffle() {
 		Random r = new Random();
 		int card = r.nextInt(52);
@@ -67,10 +56,11 @@ public class Deck {
 		}
 	}
 
-	public void printDeck() {
-		this.shuffle();
+	public void draw(Graphics g) {
+		int x = 50;
 		for (int i = 0 ; i < this.cards.length ; i++) {
-			System.out.println(this.cards[i]);
+			this.cards[i].draw(g, this.cards[i].toString(), new Rectangle(x, 50, 200, 300));
+			x += 25;
 		}
 	}
 

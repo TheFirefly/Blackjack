@@ -1,3 +1,6 @@
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
 public class Hand {
 
 	private Card[] cards;
@@ -14,6 +17,15 @@ public class Hand {
 		if (amountOfCards < 11) {
 			cards[amountOfCards] = c;
 			amountOfCards++;
+		}
+	}
+
+	public void draw(Graphics g) {
+		int x = 50;
+		
+		for (int i = 0 ; i < amountOfCards ; i++) {
+			this.cards[i].draw(g, this.cards[i].toString(), new Rectangle(x, 50, 200, 300));
+			x += 100;
 		}
 	}
 

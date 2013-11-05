@@ -58,4 +58,8 @@ public class Player {
 	public int getScore() {
 		return this.score;
 	}
+
+	public Hand getHand() {
+		return this.hand;
+	}
 }
