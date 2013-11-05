@@ -1,10 +1,14 @@
+import java.util.Random;
+
 public class Deck {
 
 	private Card[] cards;
+	private int cardsDealt;
 
 	public Deck() {
 		//Hearts = 0, Diamonds = 1, Clubs = 2, Spades = 3
 		this.cards = new Card[52];
+		this.cardsDealt = 0;
 		String suit = "Hearts";
 		int index = 0;
 
@@ -41,12 +45,36 @@ public class Deck {
 	public static void main(String[] args) {
 		Deck d = new Deck();
 
-		d.printDeck();
+		d.shuffle();
+
+		Player p = new Player("Player", d.dealCard());
+
+		while(p.getScore() < 21) {
+			p.dealCard(d);
+		}
+	}
+
+	public void shuffle() {
+		Random r = new Random();
+		int card = r.nextInt(52);
+
+		for (int i = this.cards.length - 1 ; i >= 0 ; i--) {
+			card = r.nextInt(i + 1);
+			Card temp = this.cards[card];
+			this.cards[card] = this.cards[i];
+			this.cards[i] = temp;
+		}
 	}
 
 	public void printDeck() {
+		this.shuffle();
 		for (int i = 0 ; i < this.cards.length ; i++) {
 			System.out.println(this.cards[i]);
 		}
+	}
+
+	public Card dealCard() {
+		cardsDealt++;
+		return this.cards[this.cardsDealt - 1];
 	}
 }
