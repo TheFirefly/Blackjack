@@ -57,6 +57,14 @@ public class Player {
 		return this.score;
 	}
 
+	public int getMaxScore() {
+		return this.maxScore;
+	}
+
+	public void setMaxScore(int score) {
+		this.maxScore = score;
+	}
+
 	public int getScore() {
 		return this.score;
 	}
