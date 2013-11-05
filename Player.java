@@ -41,7 +41,7 @@ public class Player {
 			}
 		}
 
-		//Now calculate each ace value;
+		//Now calculate each ace value so that ace value is 11 until it makes it > 21
 		for (int i = 0 ; i < num ; i++) {
 			if (newScore + aces[i].getValues()[1] <= 21) {
 				newScore += aces[i].getValues()[1];

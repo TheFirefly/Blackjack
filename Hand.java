@@ -9,6 +9,7 @@ public class Hand {
 		this.amountOfCards = 1;
 	}
 
+	//Adds card to hand
 	public void addCard(Card c) {
 		if (amountOfCards < 11) {
 			cards[amountOfCards] = c;

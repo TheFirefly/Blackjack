@@ -14,10 +14,6 @@ public class Card {
 		this.suit = suit;
 	}
 
-	// public void draw(Graphics g) {
-
-	// }
-
 	public int getFaceNumber() {
 		return this.faceNumber;
 	}
