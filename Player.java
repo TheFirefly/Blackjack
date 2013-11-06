@@ -1,3 +1,6 @@
+import java.util.List;
+import java.util.ArrayList;
+
 public class Player {
 
 	private Hand hand;
@@ -30,25 +33,23 @@ public class Player {
 	public int updateScore(Card newCard) {
 
 		int newScore = 0;
-		Card[] aces = new Card[4];
-		int num = 0;
+		List<Card> aces = new ArrayList<Card>(4);
 
 		for (int i = 0 ; i < hand.getNumberOfCards() ; i++) {
 			if (hand.getCards()[i].getValues().length == 2) {
 				//Ace, save for later
-				aces[0] = hand.getCards()[i];
-				num++;
+				aces.add(hand.getCards()[i]);
 			} else {
 				newScore += hand.getCards()[i].getValues()[0];
 			}
 		}
 
 		//Now calculate each ace value so that ace value is 11 until it makes it > 21
-		for (int i = 0 ; i < num ; i++) {
-			if (newScore + aces[i].getValues()[1] <= 21 && newScore + aces[i].getValues()[1] != this.maxScore) {
-				newScore += aces[i].getValues()[1];
+		for (Card ace : aces) {
+			if (newScore + ace.getValues()[1] <= 21 && newScore + ace.getValues()[1] != this.maxScore) {
+				newScore += ace.getValues()[1];
 			} else {
-				newScore += aces[i].getValues()[0];
+				newScore += ace.getValues()[0];
 			}
 		}
 
