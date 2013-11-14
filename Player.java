@@ -1,61 +1,23 @@
-import java.util.List;
-import java.util.ArrayList;
-
 public class Player {
-
-	private Hand hand;
-	private String type;
-	private int score;
 	private int maxScore;
+	private HandPanel panel;
+	private String name;
 
-	public Player(String type, Card initialCard, int maxScore) {
-		this.type = type;
-		this.score = 0;
-		this.hand = new Hand(initialCard);
-		this.updateScore(initialCard);
+	public Player(String name, Card initialCard, int maxScore) {
 		this.maxScore = maxScore;
+		this.name = name;
+		this.panel = new HandPanel(this, initialCard);
 
 		System.out.println("Card dealt: " + initialCard);
 	}
 
-	public Card dealCard(Deck deck) {
+	public Card dealCard(Deck deck, boolean faceDown) {
 		Card c = deck.dealCard();
-		hand.addCard(c);
-
-		this.updateScore(c);
+		this.setScore(this.panel.getHand().addCard(c, faceDown, this.maxScore));
 		System.out.println("Card dealt: " + c);
-
-		System.out.println("Score: " + this.score);
+		System.out.println("Score: " + this.panel.getScore());
 		
 		return c;
-	}
-
-	public int updateScore(Card newCard) {
-
-		int newScore = 0;
-		List<Card> aces = new ArrayList<Card>(4);
-
-		for (int i = 0 ; i < hand.getNumberOfCards() ; i++) {
-			if (hand.getCards()[i].getValues().length == 2) {
-				//Ace, save for later
-				aces.add(hand.getCards()[i]);
-			} else {
-				newScore += hand.getCards()[i].getValues()[0];
-			}
-		}
-
-		//Now calculate each ace value so that ace value is 11 until it makes it > 21
-		for (Card ace : aces) {
-			if (newScore + ace.getValues()[1] <= 21 && newScore + ace.getValues()[1] != this.maxScore) {
-				newScore += ace.getValues()[1];
-			} else {
-				newScore += ace.getValues()[0];
-			}
-		}
-
-		this.score = newScore;
-
-		return this.score;
 	}
 
 	public int getMaxScore() {
@@ -66,11 +28,27 @@ public class Player {
 		this.maxScore = score;
 	}
 
+	public void setScore(int score) {
+		this.panel.setScore(score);
+	}
+
 	public int getScore() {
-		return this.score;
+		return this.panel.getScore();
+	}
+
+	public void resetHand(Card card) {
+		this.panel.setHand(new Hand(card));
 	}
 
 	public Hand getHand() {
-		return this.hand;
+		return this.panel.getHand();
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public HandPanel getPanel() {
+		return this.panel;
 	}
 }

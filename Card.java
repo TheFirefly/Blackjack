@@ -12,11 +12,17 @@ public class Card {
 	private int faceNumber;
 	private int[] values;
 	private String suit;
+	private boolean faceDown;
 
 	public Card(int faceNumber, String suit, int[] values) {
 		this.faceNumber = faceNumber;
 		this.values = values;
 		this.suit = suit;
+		this.faceDown = false;
+	}
+
+	public void setFaceDown(boolean state) {
+		this.faceDown = state;
 	}
 
 	public int getFaceNumber() {
@@ -31,12 +37,16 @@ public class Card {
 		return this.suit;
 	}
 
-	private static Image loadImage(String name) {
+	private static Image loadImage(String name, boolean faceDown) {
 		String path = null;
 		Image image = null;
 
 		try {
-			path = "cards" + File.separator + name + ".png";
+			if (faceDown) {
+				path = "cards" + File.separator + "back-blue.png"; 
+			} else {
+				path = "cards" + File.separator + name + ".png";
+			}
 			image = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			System.out.println("Could not load card at path: " + path);
@@ -47,7 +57,7 @@ public class Card {
 	}
 
 	public void draw(Graphics g, String name, Rectangle r) {
-		g.drawImage(Card.loadImage(name), r.x, r.y, r.width, r.height, null);
+		g.drawImage(Card.loadImage(name, this.faceDown), r.x, r.y, r.width, r.height, null);
 	}
 
 	public String getCardFace() {

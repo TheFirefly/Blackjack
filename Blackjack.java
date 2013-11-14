@@ -2,6 +2,7 @@ import java.awt.*;
 import java.applet.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 public class Blackjack extends Applet implements ActionListener {
 
@@ -11,10 +12,10 @@ public class Blackjack extends Applet implements ActionListener {
 	private Button hit;
 	private Button stay;
 	private Button reset;
-	private HandPanel playerPanel;
-	private HandPanel dealerPanel;
 
 	public void init() {
+
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		repaint();
 
@@ -24,6 +25,9 @@ public class Blackjack extends Applet implements ActionListener {
 		hit.addActionListener(this);
 		stay.addActionListener(this);
 		reset.addActionListener(this);
+		hit.setMaximumSize(new Dimension(100, 20));
+		stay.setMaximumSize(new Dimension(100, 20));
+		reset.setMaximumSize(new Dimension(100, 20));
 		add(hit);
 		add(stay);
 		add(reset);
@@ -32,8 +36,13 @@ public class Blackjack extends Applet implements ActionListener {
 
 		deck.shuffle();
 
-		p = new Player("Player", deck.dealCard(), 20);
-		dealer = new Player("Dealer", deck.dealCard(), 17);
+		p = new Human("Test Player", deck.dealCard(), 20);
+		Card c = deck.dealCard();
+		c.setFaceDown(true);
+		dealer = new Dealer(c, 17);
+
+		add(p.getPanel());
+		add(dealer.getPanel());
 
 		p.dealCard(deck, false);
 		dealer.dealCard(deck, false);
@@ -45,14 +54,18 @@ public class Blackjack extends Applet implements ActionListener {
 
 	public void paint(Graphics g) {
 
-		p.getHand().draw(50, g);
-		dealer.getHand().draw(375, g);
+		p.getPanel().paint(g);
+		dealer.getPanel().paint(g);
+
+		// p.getHand().draw(50, g);
+		// dealer.getHand().draw(375, g);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		Button source = (Button) e.getSource();
 
 		if (source.getLabel().equals("Hit")) {
+			System.out.println("HIT");
 			p.dealCard(deck, false);
 			repaint();
 
