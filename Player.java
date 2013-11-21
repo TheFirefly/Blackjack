@@ -3,21 +3,24 @@ public class Player {
 	private HandPanel panel;
 	private String name;
 
-	public Player(String name, Card initialCard, int maxScore) {
+	public Player(String name, Card initialCard, int maxScore, boolean hasButtons) {
 		this.maxScore = maxScore;
 		this.name = name;
-		this.panel = new HandPanel(this, initialCard);
-
-		System.out.println("Card dealt: " + initialCard);
+		this.panel = new HandPanel(this, initialCard, hasButtons);
 	}
 
 	public Card dealCard(Deck deck, boolean faceDown) {
 		Card c = deck.dealCard();
 		this.setScore(this.panel.getHand().addCard(c, faceDown, this.maxScore));
-		System.out.println("Card dealt: " + c);
-		System.out.println("Score: " + this.panel.getScore());
+		this.panel.validate();
 		
 		return c;
+	}
+
+	public void automizeHand(Deck d) {}
+
+	public ButtonPanel getButtons() {
+		return this.panel.getButtons();
 	}
 
 	public int getMaxScore() {
@@ -38,6 +41,7 @@ public class Player {
 
 	public void resetHand(Card card) {
 		this.panel.setHand(new Hand(card));
+		this.panel.validate();
 	}
 
 	public Hand getHand() {

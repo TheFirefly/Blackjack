@@ -1,9 +1,10 @@
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.*;
 import java.util.List;
 import java.util.ArrayList;
 
-public class Hand {
+public class Hand extends JPanel {
 
 	private Card[] cards;
 	private int amountOfCards;
@@ -12,6 +13,10 @@ public class Hand {
 		this.cards = new Card[11];
 		this.cards[0] = card;
 		this.amountOfCards = 1;
+
+		add(card);
+
+		//this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	}
 
 	public void setAllFaceUp() {
@@ -26,6 +31,8 @@ public class Hand {
 			c.setFaceDown(faceDown);
 			cards[amountOfCards] = c;
 			amountOfCards++;
+
+			add(c);
 		}
 
 		return calculateScore(c, maxScore);
@@ -55,14 +62,6 @@ public class Hand {
 		}
 
 		return newScore;
-	}
-
-	public void draw(int y, Graphics g) {
-		int x = 50;
-		for (int i = 0 ; i < amountOfCards ; i++) {
-			this.cards[i].draw(g, this.cards[i].toString(), new Rectangle(x, y, 200, 300));
-			x += 225;
-		}
 	}
 
 	public Card[] getCards() {

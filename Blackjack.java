@@ -9,37 +9,26 @@ public class Blackjack extends Applet implements ActionListener {
 	private Deck deck;
 	private Player p;
 	private Player dealer;
-	private Button hit;
-	private Button stay;
-	private Button reset;
+	private JLabel cards;
 
 	public void init() {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		repaint();
-
-		hit = new Button("Hit");
-		stay = new Button("Stay");
-		reset = new Button("Reset");
-		hit.addActionListener(this);
-		stay.addActionListener(this);
-		reset.addActionListener(this);
-		hit.setMaximumSize(new Dimension(100, 20));
-		stay.setMaximumSize(new Dimension(100, 20));
-		reset.setMaximumSize(new Dimension(100, 20));
-		add(hit);
-		add(stay);
-		add(reset);
-
 		this.deck = new Deck();
 
 		deck.shuffle();
 
-		p = new Human("Test Player", deck.dealCard(), 20);
+		this.cards = new JLabel();
+
+		add(this.cards);
+
+		p = new Human("Test Player", deck.dealCard(), 20, true);
 		Card c = deck.dealCard();
 		c.setFaceDown(true);
 		dealer = new Dealer(c, 17);
+
+		p.getButtons().addListeners(this);
 
 		add(p.getPanel());
 		add(dealer.getPanel());
@@ -47,60 +36,57 @@ public class Blackjack extends Applet implements ActionListener {
 		p.dealCard(deck, false);
 		dealer.dealCard(deck, false);
 
+		dealer.getPanel().changeScoreHidden(true);
+
 		if (p.getScore() >= 21) {
 			playDealer();
 		}
 	}
 
 	public void paint(Graphics g) {
-
-		p.getPanel().paint(g);
-		dealer.getPanel().paint(g);
-
-		// p.getHand().draw(50, g);
-		// dealer.getHand().draw(375, g);
+		super.paint(g);
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		Button source = (Button) e.getSource();
+		JButton source = (JButton) e.getSource();
 
-		if (source.getLabel().equals("Hit")) {
-			System.out.println("HIT");
+		if (source.getText().equals("Hit")) {
 			p.dealCard(deck, false);
-			repaint();
+			validate();
 
 			if (p.getScore() >= 21) {
 				playDealer();
 			}
 			return;
-		} else if (source.getLabel().equals("Stay")) {
+		} else if (source.getText().equals("Stay")) {
 			playDealer();
 			return;
-		} else if (source.getLabel().equals("Reset")) {
-			hit.setEnabled(true);
-			stay.setEnabled(true);
+		} else if (source.getText().equals("Reset")) {
 			reset();
 			return;
+		} else if (source.getText().equals("New Hand")) {
+			p.getButtons().setActive(true);
+			p.getButtons().getButtonByName("New Hand").setEnabled(false);
+			p.resetHand(deck.dealCard());
+			dealer.resetHand(deck.dealCard());
+			p.dealCard(deck, false);
+			dealer.dealCard(deck, false);
+
+			dealer.getPanel().changeScoreHidden(true);
+
+			validate();
+
 		}
 	}
 
 	public void playDealer() {
-		hit.setEnabled(false);
-		stay.setEnabled(false);
-
-		if (p.getScore() > 21) {
-			dealer.setMaxScore(11);
-		}
-
-		dealer.getHand().setAllFaceUp();
-		repaint();
-
-		while (dealer.getScore() < dealer.getMaxScore()) {
-			dealer.dealCard(deck, false);
-		}
+		p.getButtons().setActive(false);
+		dealer.automizeHand(this.deck);
+		p.getButtons().getButtonByName("New Hand").setEnabled(true);
 	}
 
 	public void reset() {
+		p.getButtons().setActive(true);
 		deck = new Deck();
 		deck.shuffle();
 		p.setScore(0);
@@ -112,7 +98,9 @@ public class Blackjack extends Applet implements ActionListener {
 		p.dealCard(deck, false);
 		dealer.dealCard(deck, false);
 
-		repaint();
+		dealer.getPanel().changeScoreHidden(true);
+
+		validate();
 	}
 
 }

@@ -6,8 +6,11 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.Dimension;
 
-public class Card {
+public class Card extends JLabel {
 
 	private int faceNumber;
 	private int[] values;
@@ -19,10 +22,18 @@ public class Card {
 		this.values = values;
 		this.suit = suit;
 		this.faceDown = false;
+
+		this.setIcon(new ImageIcon(this.loadImage(this.toString(), this.faceDown, 200, 300)));
+		this.setBorder(new EmptyBorder(10, 10, 10, 10));
+	}
+
+	public boolean isFacedown() {
+		return this.faceDown;
 	}
 
 	public void setFaceDown(boolean state) {
 		this.faceDown = state;
+		this.setIcon(new ImageIcon(this.loadImage(this.toString(), state, 200, 300)));
 	}
 
 	public int getFaceNumber() {
@@ -37,9 +48,10 @@ public class Card {
 		return this.suit;
 	}
 
-	private static Image loadImage(String name, boolean faceDown) {
+	private static Image loadImage(String name, boolean faceDown, int width, int height) {
 		String path = null;
 		Image image = null;
+		Image scaled = null;
 
 		try {
 			if (faceDown) {
@@ -48,16 +60,13 @@ public class Card {
 				path = "cards" + File.separator + name + ".png";
 			}
 			image = ImageIO.read(new File(path));
+			scaled = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			System.out.println("Could not load card at path: " + path);
 			e.printStackTrace();
 		}
 
-		return image;
-	}
-
-	public void draw(Graphics g, String name, Rectangle r) {
-		g.drawImage(Card.loadImage(name, this.faceDown), r.x, r.y, r.width, r.height, null);
+		return scaled;
 	}
 
 	public String getCardFace() {

@@ -44,6 +44,10 @@ public class Deck {
 		}
 	}
 
+	public int getCardsDealt() {
+		return this.cardsDealt;
+	}
+
 	public void shuffle() {
 		Random r = new Random();
 		int card = r.nextInt(52);
@@ -56,16 +60,14 @@ public class Deck {
 		}
 	}
 
-	public void draw(Graphics g, int y) {
-		int x = 50;
-		for (int i = 0 ; i < this.cards.length ; i++) {
-			this.cards[i].draw(g, this.cards[i].toString(), new Rectangle(x, y, 200, 300));
-			x += 25;
-		}
-	}
-
 	public Card dealCard() {
+		Card dealt = this.cards[this.cardsDealt];
 		cardsDealt++;
-		return this.cards[this.cardsDealt - 1];
+		if (cardsDealt > 51) {
+			//Last card was dealt
+			this.cardsDealt = 0;
+			this.shuffle();
+		}
+		return dealt;
 	}
 }
