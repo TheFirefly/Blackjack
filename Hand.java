@@ -9,14 +9,9 @@ public class Hand extends JPanel {
 	private Card[] cards;
 	private int amountOfCards;
 
-	public Hand(Card card) {
+	public Hand() {
 		this.cards = new Card[11];
-		this.cards[0] = card;
-		this.amountOfCards = 1;
-
-		add(card);
-
-		//this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		this.amountOfCards = 0;
 	}
 
 	public void setAllFaceUp() {
@@ -26,11 +21,13 @@ public class Hand extends JPanel {
 	}
 
 	//Adds card to hand
-	public int addCard(Card c, boolean faceDown, int maxScore) {
+	public int addCard(Card c, boolean faceDown, int maxScore, int cardWidth, int cardHeight) {
 		if (amountOfCards < 11) {
 			c.setFaceDown(faceDown);
 			cards[amountOfCards] = c;
 			amountOfCards++;
+
+			c.setIcon(new ImageIcon(c.loadImage(c.toString(), faceDown, cardWidth, cardHeight)));
 
 			add(c);
 		}
@@ -62,6 +59,13 @@ public class Hand extends JPanel {
 		}
 
 		return newScore;
+	}
+
+	public Hand setCards(Card[] cards, int amountOfCards) {
+		this.cards = cards;
+		this.amountOfCards = amountOfCards;
+
+		return this;
 	}
 
 	public Card[] getCards() {

@@ -10,16 +10,32 @@ public class HandPanel extends JPanel {
 	private JLabel scoreLabel;
 	private ButtonPanel buttonPanel;
 	private String scorePrefix;
+	private int money;
+	private String moneyPrefix;
+	private int moneyBet;
+	public int cardHeight;
+	public int cardWidth;
 
-	public HandPanel(Player p, Card initialCard, boolean hasButtons) {
-		this.hand = new Hand(initialCard);
+	public HandPanel(Player p, boolean hasButtons, boolean hasMoney, int startingMoney, boolean isSecondPanel) {
+		this.hand = new Hand();
 		this.isScoreHidden = false;
-		this.score = this.hand.calculateScore(initialCard, p.getMaxScore());
+		this.money = startingMoney;
+		this.moneyBet = 0;
+		this.score = 0;
+		this.cardHeight = 300;
+		this.cardWidth = 200;
+
+		if (hasMoney) {
+			this.moneyPrefix = "($" + money + ") ";
+		} else {
+			this.moneyPrefix = "";
+		}
+
 		this.scorePrefix = p.getName() + "'s Score: ";
-		this.scoreLabel = new JLabel(scorePrefix + this.score);
+		this.scoreLabel = new JLabel(moneyPrefix + scorePrefix + this.score);
 		
 		if (hasButtons) {
-			this.buttonPanel = new ButtonPanel();
+			this.buttonPanel = new ButtonPanel(isSecondPanel);
 		}
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -29,9 +45,66 @@ public class HandPanel extends JPanel {
 		}
 		add(hand);
 
-		//this.setBorder(BorderFactory.createLineBorder(Color.CYAN));
+		validate();
+	}
+
+	public void resizePanel(int x, int y) {
+		for (int i = 0 ; i < this.hand.getNumberOfCards() ; i++) {
+			Card c = this.hand.getCards()[i];
+			this.hand.remove(c);
+			c.setIcon(new ImageIcon(c.loadImage(c.toString(), false, x, y)));
+			this.hand.add(c);
+			this.cardHeight = y;
+			this.cardWidth = x;
+		}
+	}
+
+	public void calculateEarnings(int gameResult) {
+		if (gameResult == 0) {
+			//win
+			updateMoney(this.moneyBet * 2);
+		} else if (gameResult == 2) {
+			//push
+			updateMoney(this.moneyBet);
+		}
+
+		this.moneyBet = 0;
+	}
+
+	public void updateAfterSplit(int newScore) {
+		this.score = newScore;
+		this.scoreLabel.setText(this.moneyPrefix + this.scorePrefix + this.score);
+		this.buttonPanel.split();
+	}
+
+	public int getMoney() {
+		return this.money;
+	}
+
+	public int getMoneyBet() {
+		return this.moneyBet;	
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
+
+	public int updateMoney(int moneyGained) {
+		this.money += moneyGained;
+		this.moneyPrefix = "($" + this.money + ") ";
+		this.scoreLabel.setText(this.moneyPrefix + this.scorePrefix + this.score);
+
+		if (moneyGained < 0) {
+			betMoney(moneyGained * -1);
+		}
 
 		validate();
+
+		return this.money;
+	}
+
+	public void betMoney(int moneyBet) {
+		this.moneyBet += moneyBet;
 	}
 
 	public ButtonPanel getButtons() {
@@ -40,9 +113,9 @@ public class HandPanel extends JPanel {
 
 	public void changeScoreHidden(boolean state) {
 		if (state) {
-			this.scoreLabel.setText(this.scorePrefix + "???");
+			this.scoreLabel.setText(this.moneyPrefix + this.scorePrefix + "???");
 		} else {
-			this.scoreLabel.setText(this.scorePrefix + this.score);
+			this.scoreLabel.setText(this.moneyPrefix + this.scorePrefix + this.score);
 		}
 
 		validate();
@@ -50,7 +123,7 @@ public class HandPanel extends JPanel {
 
 	public void setScore(int score) {
 		this.score = score;
-		this.scoreLabel.setText(this.scorePrefix + this.score);
+		this.scoreLabel.setText(this.moneyPrefix + this.scorePrefix + this.score);
 	} 
 
 	public int getScore() {

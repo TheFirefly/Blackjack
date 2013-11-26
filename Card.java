@@ -48,7 +48,7 @@ public class Card extends JLabel {
 		return this.suit;
 	}
 
-	private static Image loadImage(String name, boolean faceDown, int width, int height) {
+	public static Image loadImage(String name, boolean faceDown, int width, int height) {
 		String path = null;
 		Image image = null;
 		Image scaled = null;

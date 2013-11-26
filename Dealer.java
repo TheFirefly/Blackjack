@@ -1,13 +1,7 @@
 public class Dealer extends Player {
 
-	public Dealer(Card initialCard, int maxScore) {
-		super("Dealer", initialCard, maxScore, false);
-	}
-
-	@Override
-	public void resetHand(Card card) {
-		card.setFaceDown(true);
-		super.resetHand(card);
+	public Dealer(int maxScore) {
+		super("Dealer", maxScore, false, false, 0);
 	}
 
 	public void automizeHand(Deck d) {
@@ -17,7 +11,7 @@ public class Dealer extends Player {
 		getHand().validate();
 
 		while (getScore() < getMaxScore()) {
-			dealCard(d, false);
+			dealCard(d, false, false);
 		}
 	}
 
